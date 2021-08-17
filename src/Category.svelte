@@ -1,13 +1,14 @@
 <script context="module" lang="ts">
-  import type { ItemProp, CategoryType } from "./types";
+  import type { ItemProp, CategoryType, ShowType } from "./types";
+  import { blurOnKey } from "./Item.svelte";
 </script>
 
 <script lang="ts">
   import Item from "./Item.svelte";
-  import { getGuid, blurOnKey, sortOnName } from "./util";
+  import { getGuid, sortOnName } from "./util";
   export let categories: CategoryType[];
   export let category: CategoryType;
-  export let show: "all" | "packed" | "unpacked";
+  export let show: ShowType;
   let editing = false;
   let itemName = "";
   let items: CategoryType["items"] = [];

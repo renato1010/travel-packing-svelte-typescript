@@ -1,9 +1,15 @@
 <script context="module" lang="ts">
   import type { ItemProp } from "./types";
+
+  export const blurOnKey: svelte.JSX.KeyboardEventHandler<HTMLInputElement> = (event) => {
+    const { code } = event;
+    if (code === "Enter" || code === "Escape" || code === "Tab") {
+      event.currentTarget.blur();
+    }
+  };
 </script>
 
 <script lang="ts">
-  import { blurOnKey } from "./util";
   export let item: ItemProp;
   let editing = false;
 </script>

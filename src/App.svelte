@@ -1,10 +1,12 @@
 <script lang="ts">
+  import Checklist from "./Checklist.svelte";
   import Login from "./Login.svelte";
 </script>
 
 <main>
   <h1 class="hero">Travel Packing Checklist</h1>
-  <Login />
+  <!-- <Login /> -->
+  <Checklist />
 </main>
 
 <style>

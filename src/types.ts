@@ -9,3 +9,5 @@ export type CategoryType = {
   name: string;
   items: ItemProp[];
 };
+
+export type ShowType = "all" | "packed" | "unpacked";
