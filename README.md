@@ -41,9 +41,9 @@ At [src/Item.svelte](src/Item.svelte)
 ...
 ```
 
-2. For typing DOM Elements the namescpace `svelte` is only available in .svelte files not for .ts
+2. For typing DOM Elements the namescpace `svelte` is only available in .svelte files not for .ts  
    So if you need to type a say a callback function/event handler, you'll need to define it in a `.svelte`  
-   file like this:
+   file like this: at [src/Item.svelte](src/Item.svelte)
 
 ```svelte
 <script context="module" lang="ts">
@@ -58,7 +58,17 @@ At [src/Item.svelte](src/Item.svelte)
 </script>
 ```
 
-\* The type `svelte.JSX.KeyboardEventHandler<HTMLInputElement>` is not availabe in .ts file
+and then import as in (1);
+at [src/Category.svelte](src/Category.svelte)
+
+```svelte
+<script context="module" lang="ts">
+  import type { ItemProp, CategoryType, ShowType } from "./types";
+  import { blurOnKey } from "./Item.svelte";
+</script>
+```
+
+\* The type `svelte.JSX.KeyboardEventHandler<HTMLInputElement>` is not availabe in .ts file  
 so take this into account when refactoring
 
 ## Get started
