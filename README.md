@@ -1,27 +1,72 @@
-*Looking for a shareable component template? Go here --> [sveltejs/component-template](https://github.com/sveltejs/component-template)*
+## This App
 
----
+This App is based on `travel-packing` app shown in book [Svelte and Sapper in Action](https://www.manning.com/books/svelte-and-sapper-in-action) by Mark Volkmann  
+**The twist** is that original app was written in _JavaScript_ I build the app in _Typescript_ as an exercise
 
-# svelte app
+## Things I learned
 
-This is a project template for [Svelte](https://svelte.dev) apps. It lives at https://github.com/sveltejs/template.
+1. To import/export Typescript tokens e.g _types_/_interfaces_ a good deal is to "centralize" as posible,  
+   defined in one file (exports) and import(consume) in a `<script context="module" lang="ts">` in the consumer  
+   .svelte component
 
-To create a new project based on this template using [degit](https://github.com/Rich-Harris/degit):
+Example:
+At [src/types.ts](src/types.ts)
 
-```bash
-npx degit sveltejs/template svelte-app
-cd svelte-app
+export:
+
+```typescript
+export type ItemProp = {
+  id: string;
+  name: string;
+  packed: boolean;
+};
+
+export type CategoryType = {
+  id: string;
+  name: string;
+  items: ItemProp[];
+};
+
+export type ShowType = "all" | "packed" | "unpacked";
 ```
 
-*Note that you will need to have [Node.js](https://nodejs.org) installed.*
+import:
+At [src/Item.svelte](src/Item.svelte)
 
+```svelte
+<script context="module" lang="ts">
+  import type { ItemProp, CategoryType, ShowType } from "./types";
+  import { blurOnKey } from "./Item.svelte";
+</script>
+...
+```
+
+2. For typing DOM Elements the namescpace `svelte` is only available in .svelte files not for .ts
+   So if you need to type a say a callback function/event handler, you'll need to define it in a `.svelte`  
+   file like this:
+
+```svelte
+<script context="module" lang="ts">
+  import type { ItemProp } from "./types";
+
+  export const blurOnKey: svelte.JSX.KeyboardEventHandler<HTMLInputElement> = (event) => {
+    const { code } = event;
+    if (code === "Enter" || code === "Escape" || code === "Tab") {
+      event.currentTarget.blur();
+    }
+  };
+</script>
+```
+
+\* The type `svelte.JSX.KeyboardEventHandler<HTMLInputElement>` is not availabe in .ts file
+so take this into account when refactoring
 
 ## Get started
 
 Install the dependencies...
 
 ```bash
-cd svelte-app
+cd travel-packing-svelte-typescript
 npm install
 ```
 
@@ -47,12 +92,11 @@ npm run build
 
 You can run the newly built app with `npm run start`. This uses [sirv](https://github.com/lukeed/sirv), which is included in your package.json's `dependencies` so that the app will work when you deploy to platforms like [Heroku](https://heroku.com).
 
-
 ## Single-page app mode
 
 By default, sirv will only respond to requests that match files in `public`. This is to maximise compatibility with static fileservers, allowing you to deploy your app anywhere.
 
-If you're building a single-page app (SPA) with multiple routes, sirv needs to be able to respond to requests for *any* path. You can make it so by editing the `"start"` command in package.json:
+If you're building a single-page app (SPA) with multiple routes, sirv needs to be able to respond to requests for _any_ path. You can make it so by editing the `"start"` command in package.json:
 
 ```js
 "start": "sirv public --single"
