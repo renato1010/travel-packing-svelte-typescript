@@ -13,7 +13,6 @@
   let show: ShowType = "all";
 
   $: categoryArray = sortOnName(categories);
-  $: console.log({ categoryArray });
 
   function addCategory() {
     const duplicate = Object.values(categories).some((cat) => cat.name === categoryName);
