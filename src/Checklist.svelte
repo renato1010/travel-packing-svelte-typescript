@@ -1,11 +1,13 @@
 <script context="module" lang="ts">
-  import type { CategoryType, ShowType } from "./types";
+  import type { CategoryType, DeleteCatEvent, ShowType } from "./types";
 </script>
 
 <script lang="ts">
+  import { createEventDispatcher } from "svelte";
   import Category from "./Category.svelte";
   import { getGuid, sortOnName } from "./util";
 
+  const dispatch = createEventDispatcher();
   let categoryArray: CategoryType[] = [];
   let categories: CategoryType[] = [];
   let categoryName: string = "";
@@ -15,7 +17,7 @@
   $: categoryArray = sortOnName(categories);
 
   function addCategory() {
-    const duplicate = Object.values(categories).some((cat) => cat.name === categoryName);
+    const duplicate = categories.some((cat) => cat.name === categoryName);
     if (duplicate) {
       message = `The category "${categoryName}" already exists.`;
       alert(message); // will change to a dialog later
@@ -29,13 +31,30 @@
   }
 
   function clearAllChecks() {
-    for (const category of Object.values(categories)) {
+    for (const category of categories) {
       for (const item of Object.values(category.items)) {
         item.packed = false;
       }
     }
     categories = categories;
   }
+  const deleteCategory = (evt: CustomEvent<DeleteCatEvent["deleteCat"]>) => {
+    const { catId } = evt.detail;
+    const keepCats = [...categoryArray].filter((cat) => cat.id !== catId);
+    categoryArray = keepCats;
+  };
+  const restore = () => {
+    const text = localStorage.getItem("travel-packing");
+    if (text && text !== "{}") {
+      categories = JSON.parse(text);
+    }
+  };
+
+  restore();
+  $: if (categories) persist();
+  const persist = () => {
+    localStorage.setItem("travel-packing", JSON.stringify(categories));
+  };
 </script>
 
 <section>
@@ -46,7 +65,7 @@
         <input required bind:value={categoryName} />
       </label>
       <button disabled={!categoryName}>Add Category</button>
-      <button class="logout-btn">Log Out</button>
+      <button on:click={() => dispatch("logout")} class="logout-btn">Log Out</button>
     </form>
     <p>
       Suggested categories include Backpack, Clothes,
@@ -74,8 +93,8 @@
   </header>
 
   <div class="categories">
-    {#each categoryArray as category (category.id)}
-      <Category bind:category {categories} {show} />
+    {#each categories as category (category.id)}
+      <Category on:deleteCat={deleteCategory} on:persist={persist} bind:category {categories} {show} />
     {/each}
   </div>
 </section>

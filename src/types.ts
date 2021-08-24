@@ -11,3 +11,5 @@ export type CategoryType = {
 };
 
 export type ShowType = "all" | "packed" | "unpacked";
+export type DeleteItemEvent = { deleteItem: { itemId: string } };
+export type DeleteCatEvent = { deleteCat: { catId: string }; persist };

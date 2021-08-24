@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-  import type { ItemProp } from "./types";
+  import type { ItemProp, DeleteItemEvent } from "./types";
 
   export const blurOnKey: svelte.JSX.KeyboardEventHandler<HTMLInputElement> = (event) => {
     const { code } = event;
@@ -10,7 +10,10 @@
 </script>
 
 <script lang="ts">
+  import { createEventDispatcher } from "svelte";
+
   export let item: ItemProp;
+  const dispatch = createEventDispatcher<DeleteItemEvent>();
   let editing = false;
 </script>
 
@@ -22,7 +25,7 @@
       autofocus
       bind:value={item.name}
       on:blur={() => (editing = false)}
-      on:keydown={blurOnKey}
+      on:keydown={(e) => blurOnKey(e)}
       type="text"
     />
   {:else}
@@ -30,7 +33,7 @@
       {item.name}
     </span>
   {/if}
-  <button class="icon">&#x1F5D1;</button>
+  <button class="icon" on:click={() => dispatch("deleteItem", { itemId: item.id })}>&#x1F5D1;</button>
 </li>
 
 <style>
