@@ -71,6 +71,29 @@ at [src/Category.svelte](src/Category.svelte)
 \* The type `svelte.JSX.KeyboardEventHandler<HTMLInputElement>` is not availabe in .ts file  
 so take this into account when refactoring
 
+## Chapter 5 take away
+
+for typing custom events, defined a type at `src/types.ts`
+
+```typescript
+export type DeleteItemEvent = { deleteItem: { itemId: string } };
+```
+
+then use it to type the custom event at `src/Item.svelte`
+
+```typescript
+const dispatch = createEventDispatcher<DeleteItemEvent>();
+```
+
+So when dispatch:
+you'll have type info & auto-completion
+![type info & auto completion](screenshots/type-completion-available_Peek%202021-08-23%2019-19.gif)
+
+Same as when consuming custom event in parent component
+you'll have correct type for event
+
+![consuming custom event in parent cmp](screenshots/consuming-custom-event-Peek%202021-08-23%2019-25.gif)
+
 ## Get started
 
 Install the dependencies...
